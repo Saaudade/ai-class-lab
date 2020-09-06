@@ -1,4 +1,6 @@
 import re
+import random
+from random import randrange
 
 _PLAYER = "player"
 _MACHINE = "machine"
@@ -14,7 +16,47 @@ class TicTacToeGame():
     self.winner = None
 
   def is_over(self): # TODO: Finish this function by adding checks for a winning game (rows, columns, diagonals)
-    return self.board.count(None) == 0
+    over = False
+    x = 'xxx'
+    o = 'ooo'
+
+    fila0 = str(self.board[0])+str(self.board[1])+str(self.board[2])
+    fila1 = str(self.board[3])+str(self.board[4])+str(self.board[5])
+    fila2 = str(self.board[6])+str(self.board[7])+str(self.board[8])
+
+    col0 = str(self.board[0])+str(self.board[3])+str(self.board[6])
+    col1 = str(self.board[1])+str(self.board[4])+str(self.board[7])
+    col2 = str(self.board[2])+str(self.board[5])+str(self.board[8])
+
+    diag0 = str(self.board[0])+str(self.board[4])+str(self.board[8])
+    diag1 = str(self.board[2])+str(self.board[4])+str(self.board[6])
+
+    lista = [fila0,fila1,fila2,col0,col1,col2,diag0,diag1]
+
+    i = 0
+     
+    while i < len(lista):
+      if lista[i] == x:
+        over = True
+        i = len(lista)
+      elif lista[i] == o:
+        over = True
+        i = len(lista)
+      else:
+        i+=1
+    
+    todasCasillasMarcadas = True
+    if(self.board.count(None)):
+      todasCasillasMarcadas = False
+
+   
+   
+    for i in lista:
+      if(i!=x or i!=o) and todasCasillasMarcadas:
+        over = True
+        
+
+    return over
 
   def play(self):
     if self.turn == _PLAYER:
@@ -52,25 +94,73 @@ class TicTacToeGame():
   def machine_turn(self):
     # TODO: Implement this function to make the machine choose a random cell (use random module)
     # The result of this function should be that self.board now has one more random cell occupied
-
-    for i, cell in enumerate(self.board):
-      if cell is None:
+    seMarco = True
+    i = random.randrange(0,8)
+    while seMarco:
+      if self.board[i] is None:
         self.board[i] = _MACHINE_SYMBOL
-        break
+        seMarco = False
+      else:
+        i = random.randrange(0,8)
 
   def format_board(self):
     # TODO: Implement this function, it must be able to print the board in the following format:
-    #  x|o| 
-    #   | | 
-    #   | | 
-    return self.board
+    i=0
+    while i < len(self.board):
+      palito = "|"
+      cadena1 = str(self.board[i])
+      cadena2 = str(self.board[i+1])
+      cadena3 = str(self.board[i+2])
+
+      if cadena1 == 'None':
+        cadena1 = ' '
+
+      if cadena2 == 'None':
+        cadena2 = ' '
+
+      if cadena3 == 'None':
+        cadena3 = ' '
+      
+      print(cadena1+'|'+cadena2+'|'+cadena3)
+      i+=3
 
   def print(self):
     print("Player turn:" if self.turn == _MACHINE else "Machine turn:")
-    print(self.format_board())
+    self.format_board()
     print()
 
   def print_result(self):
     # TODO: Implement this function in order to print the result based on the self.winner
+    ganador = 'Gano: '
+    x = 'xxx'
+    o = 'ooo'
 
-    pass
+    fila0 = str(self.board[0])+str(self.board[1])+str(self.board[2])
+    fila1 = str(self.board[3])+str(self.board[4])+str(self.board[5])
+    fila2 = str(self.board[6])+str(self.board[7])+str(self.board[8])
+
+    col0 = str(self.board[0])+str(self.board[3])+str(self.board[6])
+    col1 = str(self.board[1])+str(self.board[4])+str(self.board[7])
+    col2 = str(self.board[2])+str(self.board[5])+str(self.board[8])
+
+    diag0 = str(self.board[0])+str(self.board[4])+str(self.board[8])
+    diag1 = str(self.board[2])+str(self.board[4])+str(self.board[6])
+
+    lista = [fila0,fila1,fila2,col0,col1,col2,diag0,diag1]
+
+    i = 0
+     
+    while i < len(lista):
+      if lista[i] == x:
+        ganador += 'el '+_PLAYER
+        i = len(lista)
+      elif lista[i] == o:
+        ganador += 'la '+_MACHINE
+        i = len(lista)
+      else:
+        i+=1
+
+    if i==len(lista) and ganador=='Gano: ':
+      ganador = 'Hubo un empate'
+    
+    print(ganador)
